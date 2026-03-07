@@ -1,5 +1,4 @@
 import { useTimerStore } from '../store';
-import { formatTime } from '../utils';
 import './InfoPanel.css';
 
 export function InfoPanel() {

@@ -1,5 +1,5 @@
 import { useTimerStore } from '../store';
-import { Play, Pause, Square, RotateCcw, Monitor, Settings } from 'lucide-react';
+import { Play, Pause, RotateCcw, Monitor } from 'lucide-react';
 import './Controls.css';
 
 interface ControlsProps {
