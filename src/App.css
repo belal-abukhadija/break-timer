@@ -1,0 +1,145 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  /* enforce exactly 100vh so it doesn't overflow/scroll */
+  max-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  /* reduce padding so UI fits better on small laptops */
+  position: relative;
+  transition: padding 0.5s ease;
+  overflow: hidden;
+  /* Prevent body scrolling */
+}
+
+.app-container.fullscreen-active {
+  padding: 0;
+}
+
+.app-container.fullscreen-active .focus-main {
+  max-width: 100vw;
+}
+
+.focus-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 800px;
+  height: 100%;
+  /* take full available space to center dynamically */
+  z-index: 10;
+  animation: fadeIn 0.5s ease;
+}
+
+.main-title {
+  font-size: 2rem;
+  /* slightly smaller title */
+  font-weight: 800;
+  letter-spacing: -1px;
+  margin-bottom: 0.5rem;
+  /* bring closer to clock */
+  opacity: 0.9;
+}
+
+.top-right-actions {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  z-index: 50;
+}
+
+.subtle-glass-btn {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  padding: 0.75rem;
+  border-radius: var(--radius-full);
+}
+
+.subtle-glass-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+[data-theme='light'] .subtle-glass-btn {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='light'] .subtle-glass-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.timer-fullscreen-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+/* PRESENTATION FULLSCREEN MODE */
+.timer-fullscreen-wrapper.is-fullscreen,
+.timer-fullscreen-wrapper:fullscreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Hide SVG ring in fullscreen to give maximum space to text */
+.timer-fullscreen-wrapper.is-fullscreen .timer-svg,
+.timer-fullscreen-wrapper:fullscreen .timer-svg {
+  display: none;
+}
+
+/* Reset container to allow natural text flow without ring constraints */
+.timer-fullscreen-wrapper.is-fullscreen .timer-container,
+.timer-fullscreen-wrapper:fullscreen .timer-container {
+  max-width: none;
+  width: 100%;
+  aspect-ratio: auto;
+}
+
+.timer-fullscreen-wrapper.is-fullscreen .timer-text-container,
+.timer-fullscreen-wrapper:fullscreen .timer-text-container {
+  position: static;
+}
+
+/* Massive text scaling for presentation */
+.timer-fullscreen-wrapper.is-fullscreen .timer-text,
+.timer-fullscreen-wrapper:fullscreen .timer-text {
+  font-size: 28vw;
+  font-weight: 900;
+  text-align: center;
+  line-height: 1;
+  margin: 0;
+  letter-spacing: -2px;
+}
+
+/* Scale up the MinimalTimeDisplay specifically in fullscreen */
+.timer-fullscreen-wrapper.is-fullscreen .minimal-time-display,
+.timer-fullscreen-wrapper:fullscreen .minimal-time-display {
+  font-size: 2.5vw;
+  margin-top: 1rem;
+  opacity: 0.6;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
