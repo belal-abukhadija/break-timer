@@ -1,145 +1,149 @@
-.app-container {
+/* Break Timer layout. Tokens and components come from ./styles/wb.css. */
+
+.bt-app {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  /* enforce exactly 100vh so it doesn't overflow/scroll */
-  max-height: 100vh;
+  min-height: 100dvh;
+}
+
+.bt-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  /* reduce padding so UI fits better on small laptops */
+  gap: var(--wb-s5);
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 var(--wb-s5) var(--wb-s6);
+}
+
+/* The dial */
+.bt-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+.bt-dial {
   position: relative;
-  transition: padding 0.5s ease;
-  overflow: hidden;
-  /* Prevent body scrolling */
+  width: min(100%, 52vh, 520px);
+  aspect-ratio: 1;
 }
-
-.app-container.fullscreen-active {
-  padding: 0;
-}
-
-.app-container.fullscreen-active .focus-main {
-  max-width: 100vw;
-}
-
-.focus-main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+.bt-dial svg {
   width: 100%;
-  max-width: 800px;
   height: 100%;
-  /* take full available space to center dynamically */
-  z-index: 10;
-  animation: fadeIn 0.5s ease;
+  transform: rotate(-90deg);
+  overflow: visible;
 }
-
-.main-title {
-  font-size: 2rem;
-  /* slightly smaller title */
-  font-weight: 800;
-  letter-spacing: -1px;
-  margin-bottom: 0.5rem;
-  /* bring closer to clock */
-  opacity: 0.9;
+.bt-track { stroke: var(--wb-sunk-2); }
+.bt-progress {
+  stroke: var(--wb-ink);
+  transition: stroke-dashoffset 0.25s linear, stroke var(--wb-med) var(--wb-ease);
 }
-
-.top-right-actions {
+.bt-face {
   position: absolute;
-  top: 2rem;
-  right: 2rem;
-  z-index: 50;
-}
-
-.subtle-glass-btn {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--text-primary);
-  padding: 0.75rem;
-  border-radius: var(--radius-full);
-}
-
-.subtle-glass-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateY(-1px);
-}
-
-[data-theme='light'] .subtle-glass-btn {
-  background: rgba(0, 0, 0, 0.05);
-  border-color: rgba(0, 0, 0, 0.1);
-}
-
-[data-theme='light'] .subtle-glass-btn:hover {
-  background: rgba(0, 0, 0, 0.1);
-}
-
-.timer-fullscreen-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  transition: all 0.3s ease;
-}
-
-/* PRESENTATION FULLSCREEN MODE */
-.timer-fullscreen-wrapper.is-fullscreen,
-.timer-fullscreen-wrapper:fullscreen {
+  inset: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100vw;
-  height: 100vh;
+  gap: var(--wb-s2);
 }
-
-/* Hide SVG ring in fullscreen to give maximum space to text */
-.timer-fullscreen-wrapper.is-fullscreen .timer-svg,
-.timer-fullscreen-wrapper:fullscreen .timer-svg {
-  display: none;
-}
-
-/* Reset container to allow natural text flow without ring constraints */
-.timer-fullscreen-wrapper.is-fullscreen .timer-container,
-.timer-fullscreen-wrapper:fullscreen .timer-container {
-  max-width: none;
-  width: 100%;
-  aspect-ratio: auto;
-}
-
-.timer-fullscreen-wrapper.is-fullscreen .timer-text-container,
-.timer-fullscreen-wrapper:fullscreen .timer-text-container {
-  position: static;
-}
-
-/* Massive text scaling for presentation */
-.timer-fullscreen-wrapper.is-fullscreen .timer-text,
-.timer-fullscreen-wrapper:fullscreen .timer-text {
-  font-size: 28vw;
-  font-weight: 900;
-  text-align: center;
+.bt-time {
+  font-size: clamp(3.25rem, 9vh + 2vw, 8.5rem);
+  font-weight: 600;
   line-height: 1;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+  color: var(--wb-ink);
+  transition: color var(--wb-med) var(--wb-ease);
+}
+.bt-sub {
+  font-size: var(--wb-t-md);
+  color: var(--wb-muted);
+}
+.is-closing .bt-progress { stroke: var(--wb-warn); }
+.is-closing .bt-time { color: var(--wb-warn); }
+.is-ending .bt-progress { stroke: var(--wb-danger); }
+.is-ending .bt-time { color: var(--wb-danger); animation: bt-pulse 1s ease-in-out infinite alternate; }
+@keyframes bt-pulse { to { opacity: 0.55; } }
+
+.bt-times {
+  display: flex;
+  gap: var(--wb-s5);
+  margin-top: var(--wb-s3);
+  font-size: var(--wb-t-md);
+  color: var(--wb-muted);
+  font-variant-numeric: tabular-nums;
+}
+.bt-times strong { color: var(--wb-ink); font-weight: 600; }
+
+/* Controls */
+.bt-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--wb-s4);
+  width: 100%;
+}
+.bt-actions { display: flex; gap: var(--wb-s3); align-items: center; }
+.bt-actions .wb-btn--primary,
+.bt-actions .wb-btn--ink { min-width: 176px; }
+.bt-presets { justify-content: center; max-width: 100%; }
+.bt-custom { display: flex; gap: var(--wb-s2); align-items: center; }
+.bt-custom .wb-input { width: 7.5rem; text-align: center; }
+.bt-keys {
   margin: 0;
-  letter-spacing: -2px;
+  font-size: var(--wb-t-xs);
+  color: var(--wb-faint);
+  text-align: center;
+  line-height: 2.2;
+}
+.bt-keys kbd {
+  font: inherit;
+  font-weight: 600;
+  color: var(--wb-muted);
+  padding: 2px 8px;
+  border-radius: 5px;
+  background: var(--wb-sunk);
+}
+.bt-keys span { white-space: nowrap; margin: 0 var(--wb-s2); }
+
+/* Presentation full screen: only the digits */
+.bt-stage.is-fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  justify-content: center;
+  background: var(--wb-bg);
+}
+.bt-stage.is-fullscreen .bt-dial { width: 100%; aspect-ratio: auto; }
+.bt-stage.is-fullscreen svg { display: none; }
+.bt-stage.is-fullscreen .bt-face { position: static; }
+.bt-stage.is-fullscreen .bt-time { font-size: 27vw; letter-spacing: -0.05em; }
+.bt-stage.is-fullscreen .bt-sub { display: none; }
+.bt-stage.is-fullscreen .bt-times { font-size: 2.2vw; }
+
+/* Settings dialog */
+.bt-dialog-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--wb-s4);
+}
+.bt-group + .bt-group { margin-top: var(--wb-s5); }
+.bt-group .wb-h3 {
+  margin-bottom: var(--wb-s2);
+  color: var(--wb-muted);
+  font-weight: 500;
+  font-size: var(--wb-t-sm);
 }
 
-/* Scale up the MinimalTimeDisplay specifically in fullscreen */
-.timer-fullscreen-wrapper.is-fullscreen .minimal-time-display,
-.timer-fullscreen-wrapper:fullscreen .minimal-time-display {
-  font-size: 2.5vw;
-  margin-top: 1rem;
-  opacity: 0.6;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+@media (max-width: 640px) {
+  .bt-main { padding: 0 var(--wb-s4) var(--wb-s5); }
+  .bt-times { flex-direction: column; align-items: center; gap: var(--wb-s1); }
+  .bt-actions .wb-btn--primary,
+  .bt-actions .wb-btn--ink { min-width: 0; }
 }

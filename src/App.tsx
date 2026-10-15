@@ -1,53 +1,48 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useTimerStore } from './store';
 import { useTimerEngine } from './useTimerEngine';
 import { TimerCircle } from './components/TimerCircle';
 import { Controls } from './components/Controls';
 import { MinimalTimeDisplay } from './components/MinimalTimeDisplay';
 import { SettingsModal } from './components/SettingsModal';
-import { Settings } from 'lucide-react';
+import { Coffee, Maximize2, Settings } from 'lucide-react';
 import './App.css';
+
+// Older saved themes map onto the current three.
+const themeAttribute: Record<string, string> = {
+  light: 'light',
+  dark: 'dark',
+  'focus-black': 'focus',
+  gradient: 'dark',
+};
 
 function App() {
   const theme = useTimerStore((state) => state.theme);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const timerContainerRef = useRef<HTMLDivElement>(null);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen().catch(err => console.error(err));
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
+    } else if (document.exitFullscreen) {
+      document.exitFullscreen();
     }
   };
 
   // Initialize the timer engine loop
   useTimerEngine();
 
-  // Handle Fullscreen state changes
   useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-
+    const handleFullscreenChange = () => setIsFullscreen(!!document.fullscreenElement);
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
 
-  // Apply theme to body
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    if (theme === 'gradient') {
-      document.body.classList.add('bg-gradient');
-    } else {
-      document.body.classList.remove('bg-gradient');
-    }
+    document.documentElement.setAttribute('data-theme', themeAttribute[theme] ?? 'dark');
   }, [theme]);
 
-  // Keyboard Shortcuts
+  // Keyboard shortcuts
   const startTimer = useTimerStore((state) => state.startTimer);
   const pauseTimer = useTimerStore((state) => state.pauseTimer);
   const resumeTimer = useTimerStore((state) => state.resumeTimer);
@@ -83,38 +78,42 @@ function App() {
   }, [status, startTimer, pauseTimer, resumeTimer, resetTimer, toggleAlarmSound]);
 
   return (
-    <div className={`app-container ${isFullscreen ? 'fullscreen-active' : ''}`}>
+    <div className="bt-app">
       {!isFullscreen && (
-        <div className="top-right-actions">
-          <button
-            className="btn icon-btn subtle-glass-btn"
-            onClick={() => setIsSettingsOpen(true)}
-          >
-            <Settings size={28} />
-          </button>
-        </div>
+        <header className="wb-bar" style={{ width: '100%' }}>
+          <a className="wb-brand" href="/">
+            <span className="wb-mark" aria-hidden="true"><Coffee /></span>
+            <span className="wb-brand-text">
+              <span className="wb-brand-name">Break Timer</span>
+              <span className="wb-brand-owner">Belal's tools</span>
+            </span>
+          </a>
+          <div className="wb-bar-end">
+            <button className="wb-btn wb-btn--quiet wb-btn--icon" onClick={toggleFullscreen} aria-label="Full screen (F)" title="Full screen (F)">
+              <Maximize2 />
+            </button>
+            <button className="wb-btn wb-btn--quiet wb-btn--icon" onClick={() => setIsSettingsOpen(true)} aria-label="Settings" title="Settings">
+              <Settings />
+            </button>
+          </div>
+        </header>
       )}
 
-      {/* Main Focus Area */}
-      <main className="focus-main">
-        {!isFullscreen && (
-          <h1 className="main-title title-font">Break</h1>
-        )}
-
-        {/* Dedicated Fullscreen Target Wrapper */}
-        <div
-          ref={timerContainerRef}
-          className={`timer-fullscreen-wrapper ${isFullscreen ? 'is-fullscreen' : ''}`}
-          style={{ background: isFullscreen ? 'var(--bg-primary)' : 'transparent' }}
-        >
+      <main className="bt-main">
+        <div className={`bt-stage ${isFullscreen ? 'is-fullscreen' : ''}`}>
           <TimerCircle />
           <MinimalTimeDisplay />
         </div>
 
-        {!isFullscreen && (
-          <Controls toggleFullscreen={toggleFullscreen} />
-        )}
+        {!isFullscreen && <Controls />}
       </main>
+
+      {!isFullscreen && (
+        <footer className="wb-foot" style={{ width: '100%' }}>
+          <span>Made by <a href="mailto:belalabukhadija97@gmail.com">Belal</a></span>
+          <span>More free tools at <a href="https://belal.work" target="_blank" rel="noopener noreferrer">belal.work</a></span>
+        </footer>
+      )}
 
       <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
     </div>

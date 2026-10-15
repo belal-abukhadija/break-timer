@@ -1,5 +1,4 @@
 import { useTimerStore } from '../store';
-import './InfoPanel.css';
 
 export function InfoPanel() {
     const duration = useTimerStore((state) => state.duration);
@@ -18,26 +17,13 @@ export function InfoPanel() {
     if (status === 'idle') return null;
 
     return (
-        <div className="info-panel title-font">
-            <div className="info-item">
-                <span className="info-label">Start</span>
-                <span className="info-value">{formatClockTime(startTime)}</span>
+        <div className="wb-panel wb-row wb-row--between" style={{ width: '100%', flexWrap: 'nowrap', gap: 16 }}>
+            <span className="wb-num">Start <strong>{formatClockTime(startTime)}</strong></span>
+            <div style={{ flex: 1 }}>
+                <div className="wb-progress"><span style={{ width: `${percentComplete}%` }} /></div>
+                <span className="wb-hint wb-num">{Math.round(percentComplete)}%</span>
             </div>
-
-            <div className="info-progress">
-                <div className="progress-bar-bg">
-                    <div
-                        className="progress-bar-fill"
-                        style={{ width: `${percentComplete}%` }}
-                    />
-                </div>
-                <span className="info-percent">{Math.round(percentComplete)}%</span>
-            </div>
-
-            <div className="info-item">
-                <span className="info-label">End</span>
-                <span className="info-value">{formatClockTime(expectedEndTime)}</span>
-            </div>
+            <span className="wb-num">End <strong>{formatClockTime(expectedEndTime)}</strong></span>
         </div>
     );
 }

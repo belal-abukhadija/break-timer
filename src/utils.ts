@@ -10,7 +10,7 @@ export function formatTime(seconds: number): string {
 }
 
 export function getTimerColorClass(timeRemaining: number): string {
-    if (timeRemaining <= 10 && timeRemaining > 0) return 'color-red';
-    if (timeRemaining <= 30 && timeRemaining > 0) return 'color-orange';
-    return 'color-green';
+    if (timeRemaining <= 10 && timeRemaining > 0) return 'is-ending';
+    if (timeRemaining <= 30 && timeRemaining > 0) return 'is-closing';
+    return '';
 }

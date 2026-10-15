@@ -1,5 +1,4 @@
 import { useTimerStore } from '../store';
-import './MinimalTimeDisplay.css';
 
 export function MinimalTimeDisplay() {
     const startTime = useTimerStore((state) => state.startTime);
@@ -14,14 +13,9 @@ export function MinimalTimeDisplay() {
     };
 
     return (
-        <div className="minimal-time-display title-font">
-            <span className="time-endpoint">
-                <span className="time-label">Break Start</span> {formatClockTime(startTime)}
-            </span>
-            <span className="time-separator">—</span>
-            <span className="time-endpoint">
-                <span className="time-label">Break End</span> {formatClockTime(expectedEndTime)}
-            </span>
+        <div className="bt-times">
+            <span>Started <strong>{formatClockTime(startTime)}</strong></span>
+            <span>Ends <strong>{formatClockTime(expectedEndTime)}</strong></span>
         </div>
     );
 }
